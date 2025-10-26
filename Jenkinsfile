@@ -8,7 +8,7 @@ pipeline {
         }
         stage('MAVEN Build123') {
             steps {
-                echo 'Build the application using MAVEN'
+                echo 'Build the applications using MAVEN'
             }
         }
     }
