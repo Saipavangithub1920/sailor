@@ -6,7 +6,7 @@ pipeline {
                 echo 'Pulling Code from GIT Repo'
             }
         }
-        stage('MAVEN Build12') {
+        stage('MAVEN Build123') {
             steps {
                 echo 'Build the application using MAVEN'
             }
