@@ -1,7 +1,7 @@
 pipeline {
     agent any
     stages {
-        stage('checkout code from SCM') {
+        stage('checkout code from SCM repo') {
             steps {
                 echo 'Pulling Code from GIT Repo'
             }
