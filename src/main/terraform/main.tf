@@ -72,7 +72,7 @@ resource "aws_security_group" "sailorsg" {
 #######################Keypair##########################
 resource "aws_key_pair" "jenkins_key" {
     key_name   = "jenkins-key" 
-    public_key = file("~/.ssh/jenkins_key.pub")
+    public_key = file(pathexpand("~/.ssh/jenkins_key.pub"))
 }
 #######################EC2 Instance#######################
 resource "aws_instance" "sailorec21" {
