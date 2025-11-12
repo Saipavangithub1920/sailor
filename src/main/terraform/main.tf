@@ -69,10 +69,28 @@ resource "aws_security_group" "sailorsg" {
       Name = "sailorsg"
     }
 }
-#######################Keypair##########################
+###################### CREATE SSH KEY UNDER JENKINS #################
+resource "null_resource" "jenkins_ssh_key" {
+  provisioner "local-exec" {
+    command = <<EOT
+      echo "Generating Jenkins SSH key if not exists..."
+      sudo mkdir -p /var/lib/jenkins/.ssh
+      if [ ! -f /var/lib/jenkins/.ssh/jenkins_key ]; then
+        sudo ssh-keygen -t rsa -b 2048 -f /var/lib/jenkins/.ssh/jenkins_key -N ""
+      fi
+      sudo chown -R jenkins:jenkins /var/lib/jenkins/.ssh
+      sudo chmod 700 /var/lib/jenkins/.ssh
+      sudo chmod 600 /var/lib/jenkins/.ssh/jenkins_key
+      sudo chmod 644 /var/lib/jenkins/.ssh/jenkins_key.pub
+    EOT
+  }
+}
+
+####################### KEYPAIR ##########################
 resource "aws_key_pair" "jenkins_key" {
-    key_name   = "jenkins-key" 
-    public_key = file("/home/vagrant/.ssh/jenkins_key.pub")
+  depends_on = [null_resource.jenkins_ssh_key]
+  key_name   = "jenkins-key"
+  public_key = file("/var/lib/jenkins/.ssh/jenkins_key.pub")
 }
 #######################EC2 Instance#######################
 resource "aws_instance" "sailorec21" {
