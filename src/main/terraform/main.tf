@@ -70,14 +70,15 @@ resource "aws_security_group" "sailorsg" {
     }
 }
 #######################Keypair##########################
-resource "aws_key_pair" "saisaisai" {
-    public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDpdtcWcl7Qm4zjdK0mvEYwp/zWFQDYHdd4QEfHnCxszd8bARrl3VIVXZMH8NTJPOaKiYvOs/fI3hYu2XaQWPJYgoVDkMcvrkpWN+P6DXXpH1AFRMx2EwLj1CaM9KyMt6D/WCNhzwKSLmqT+lJ2t7jbyk/BGXX3vttI5cWI43WzepJPUyf8xg0nceLBGg04iRmmUrIR0UxxoufyJxvERsIvdmpGsP3My3bGvkbu/aDbQik5Ljc1NBB9PPERHxH7D3jdIoXocqu2/u0MDmAxRiXayFkqgWvfNmqSpAF+BlPFn1TjlFiIJo5IhaKURqtdjPcK133rp6jKUL4XLeG1r69L22XhkMXeO9qmmtsMg9dXjpps1ZHc87qXcB4VveuFjMB4N4Yx2jVo1ugXgqpzRpkZnvAaWV/etFRekQxLabRzwUd4CufMN+5mdZK6fra2D7GMCMs4GwBvNgPsYs6iqziwU7fyBXQuGwrrVjuMXXE4IDpC7Mh239l4mDG1yh4HhuaR9H5/xQUgy1IsOVSripLKpuxYiSV3ykdcLYq6nXKhFTUQOyeVLnlUhbG5/dQY0USmDfS26K1vb2HR/Xk5/qBKuX90yMbflM3mMx/+RT7PtNPSbmvqbXp3GXNlXy6jOXmDa95mefQBoxMZneWIIko/yADnz41X2rDNH1DsgTGPqw== LENOVO@SP"  
+resource "aws_key_pair" "jenkins_key" {
+    key_name   = "jenkins-key" 
+    public_key = file("~/.ssh/jenkins_key.pub")
 }
 #######################EC2 Instance#######################
 resource "aws_instance" "sailorec21" {
     #vpc_id = "aws_vpc.sailorvpc.id"
     subnet_id = aws_subnet.sailorpubsubnet.id
-    key_name = aws_key_pair.saisaisai.key_name
+    key_name = aws_key_pair.jenkins_key.key_name
     instance_type = "t2.micro"
     ami = "ami-0b09627181c8d5778"
     associate_public_ip_address = true
