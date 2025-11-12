@@ -71,21 +71,20 @@ resource "aws_security_group" "sailorsg" {
 }
 
 ##############Keypair ###################
-resource "null_resource" "jenkins_ssh_key" {
-  provisioner "local-exec" {
-    command = <<EOT
-      echo "Generating Jenkins SSH key if not exists..."
-      if [ ! -f "./jenkins_key" ]; then
-        ssh-keygen -t rsa -b 2048 -f ./jenkins_key -N ""
-      fi
-    EOT
-  }
-}
+#resource "null_resource" "jenkins_ssh_key" {
+  #provisioner "local-exec" {
+    #command = <<EOT
+      #echo "Generating Jenkins SSH key if not exists..."
+      #if [ ! -f "./jenkins_key" ]; then
+        #ssh-keygen -t rsa -b 2048 -f ./jenkins_key -N ""
+      #fi
+    #EOT
+  #}
+#}
 
 resource "aws_key_pair" "jenkins_key" {
-  depends_on = [null_resource.jenkins_ssh_key]
   key_name   = "jenkins-key"
-  public_key = file("${path.module}/jenkins_key.pub")
+  public_key = file("/var/lib/jenkins/.ssh/jenkins_key.pub")
 }
 
 #######################EC2 Instance#######################
