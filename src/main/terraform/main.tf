@@ -47,3 +47,58 @@ resource "aws_route_table_association" "sailorrtass" {
     route_table_id = aws_route_table.sailorrt.id 
 }
 
+#################### KEYPAIR ###########################
+resource "aws_key_pair" "jenkins_key" {
+    public_key = file("/var/lib/jenkins/.ssh/jenkins_key.pub")
+    key_name = "jenkins_key"
+  
+}
+
+################## Security Groups #####################
+
+resource "aws_security_group" "sshsg" {
+    vpc_id = aws_vpc.sailorvpc.id
+    ingress {
+        from_port = 22
+        to_port = 22
+        protocol = "TCP"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = -1
+        cidr_blocks = ["0.0.0.0/0"]
+    }  
+}
+
+resource "aws_security_group" "tomcatsg" {
+    vpc_id = aws_vpc.sailorvpc.id
+    ingress {
+        from_port = 8080
+        to_port = 8080
+        protocol = "TCP"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = -1
+        cidr_blocks = ["0.0.0.0/0"]
+    }  
+}
+
+############ EC2_Instance #########################
+
+resource "aws_instance" "sailorec2" {
+  #vpc_id = aws_vpc.sailorvpc.id
+  subnet_id = aws_subnet.sailorpubsn.id
+  key_name = aws_key_pair.jenkins_key.key_name
+  instance_type = "t2.micro"
+  ami = "ami-02b8269d5e85954ef"
+  associate_public_ip_address = "true"
+  vpc_security_group_ids = [aws_security_group.sshsg.id , aws_security_group.tomcatsg]
+  tags = {
+    Name = "sailorec2"
+  }
+}
