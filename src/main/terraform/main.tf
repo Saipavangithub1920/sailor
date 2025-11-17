@@ -97,7 +97,7 @@ resource "aws_instance" "sailorec2" {
   instance_type = "t2.micro"
   ami = "ami-02b8269d5e85954ef"
   associate_public_ip_address = "true"
-  vpc_security_group_ids = [aws_security_group.sshsg.id , aws_security_group.tomcatsg]
+  vpc_security_group_ids = [aws_security_group.sshsg.id , aws_security_group.tomcatsg.id]
   tags = {
     Name = "sailorec2"
   }
